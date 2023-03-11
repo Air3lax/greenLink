@@ -20,7 +20,11 @@ class worker():
         self.scriptDir = os.path.dirname(os.path.realpath(__file__))
         print('INIT')
         self.logging('Started')
-        self.config_data = cp.read_config()
+        try:
+            self.config_data = cp.read_config()
+            self.logging('Reading config-file _settings.json successfull')
+        except Exception as error:
+            self.logging('Error reading config-file: _settings.json, {}'.format(error))
         MQTT_SERVER_IP = self.config_data['mqtt_credentials']['ip']
         MQTT_SERVER_PORT = self.config_data['mqtt_credentials']['port']
         MQTT_TOPIC = self.config_data['mqtt_credentials']['topic']
@@ -39,6 +43,7 @@ class worker():
                 if res[0] != mqtt.MQTT_ERR_SUCCESS:
                     raise RuntimeError("the client is not connected")
             print("Connected with result code:"+str(rc))
+            self.logging('MQTT connected to {}, {} with result code {} on topic: {}'.format(MQTT_SERVER_IP, MQTT_SERVER_PORT, rc, MQTT_TOPIC))
             self.connected = True
             return rc
             
@@ -52,10 +57,12 @@ class worker():
                     self.mqtt_client.connect()
                     time.sleep(1)
                     print('Server reconnected!')
+                    self.logging('MQTT re-connected')
                     break
                 except Exception as e:
                     print(e)
                     print('Trying to reconnect to mqtt-Server...')
+                    self.logging('MQTT trying to re-connect to {}, {}, {}'.format(MQTT_SERVER_IP, MQTT_SERVER_PORT, MQTT_TOPIC))
                     time.sleep(1)
                     pass
         
@@ -66,7 +73,8 @@ class worker():
             m_in = json.loads(m_decode)  # decode json data
             # Get mqtt-data, check which Application has sent e.g. 'Temperaturen'
             print(m_in)
-            telegram_send.send_telegram_message(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, 'Testnachricht')
+            print(self.config_data['temperature_sensors']['greenhouse'])
+            #telegram_send.send_telegram_message(TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, 'Testnachricht')
             #self.mqtt_client.publish(MQTT_TOPIC, 'OK')
             try:
                 if m_in['applicationName'] == 'Temperaturen':
