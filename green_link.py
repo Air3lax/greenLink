@@ -17,13 +17,16 @@ import telegram_send
 
 class worker():
     def __init__(self) -> None:
+        self.scriptDir = os.path.dirname(os.path.realpath(__file__))
         print('INIT')
+        self.logging('Started')
         self.config_data = cp.read_config()
         MQTT_SERVER_IP = self.config_data['mqtt_credentials']['ip']
         MQTT_SERVER_PORT = self.config_data['mqtt_credentials']['port']
         MQTT_TOPIC = self.config_data['mqtt_credentials']['topic']
         TELEGRAM_TOKEN = self.config_data['telegram_credentials']['token']
         TELEGRAM_CHAT_ID = self.config_data['telegram_credentials']['chat_id']
+ 
         # todo: maintain mqtt loop
         self.mqtt_client = mqtt.Client()
 
@@ -78,6 +81,13 @@ class worker():
         self.mqtt_client.connect(MQTT_SERVER_IP, MQTT_SERVER_PORT, 10)
         self.mqtt_client.loop_forever()
     
+    def logging(self, entry):
+        now                 = datetime.datetime.now()
+        #print(now)
+        time_now            = now.strftime("%H:%M:%S")
+        date_now            = now.date()
+        with open (self.scriptDir + '/_'+ 'log.txt', mode ='a+') as file:
+            file.write(str(date_now)+' ' + time_now +', ' + str(entry) + '\n')
     #def get_config(self):
         #self.config_data = cp.read_config()
         
