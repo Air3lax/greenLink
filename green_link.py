@@ -64,7 +64,7 @@ class mqtt_handler():
                     print(e)
                     print('Trying to reconnect to mqtt-Server...')
                     #self.logging('MQTT trying to re-connect to {}, {}, {}'.format(MQTT_SERVER_IP, MQTT_SERVER_PORT, MQTT_UPLINK_TOPIC))
-                    time.sleep(1)
+                    time.sleep(1) #test
                     pass
         
         def on_message_mqtt(client, userdata, msg):
