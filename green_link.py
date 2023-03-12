@@ -48,10 +48,10 @@ class mqtt_handler():
             self.connected = True
             return rc
             
-        
         def on_disconnect_mqtt(client, userdata, rc):
             print('Server Disonnected!')
             connected = False
+            self.logging('MQTT disconnected, trying to re-connect to {}, {}, {}'.format(MQTT_SERVER_IP, MQTT_SERVER_PORT, MQTT_UPLINK_TOPIC))
             while connected == False:
                 try:
                     self.mqtt_client.connect(MQTT_SERVER_IP, MQTT_SERVER_PORT, 10)
@@ -63,7 +63,7 @@ class mqtt_handler():
                 except Exception as e:
                     print(e)
                     print('Trying to reconnect to mqtt-Server...')
-                    self.logging('MQTT trying to re-connect to {}, {}, {}'.format(MQTT_SERVER_IP, MQTT_SERVER_PORT, MQTT_UPLINK_TOPIC))
+                    #self.logging('MQTT trying to re-connect to {}, {}, {}'.format(MQTT_SERVER_IP, MQTT_SERVER_PORT, MQTT_UPLINK_TOPIC))
                     time.sleep(1)
                     pass
         
@@ -78,11 +78,10 @@ class mqtt_handler():
             #self.mqtt_client.publish(MQTT_TOPIC, 'OK')
             try:
                 print(mqtt_message['payload'])
-                process_sensor.decode_payload(self, mqtt_message['payload'])
+                sensor_handler.decode_payload(self, mqtt_message['payload'])
                 #pt.read_sensor(m_in, self.config_data)
             except Exception as e:
                 print(e)
-        
         
         self.mqtt_client.on_connect = on_connect_mqtt
         self.mqtt_client.on_message = on_message_mqtt
@@ -98,24 +97,13 @@ class mqtt_handler():
         with open (self.scriptDir + '/_'+ 'log.txt', mode ='a+') as file:
             file.write(str(date_now)+' ' + time_now +', ' + str(entry) + '\n')
 
-    def user_report(self):
-        pass
-        
-    def process_temp_sensor(self):
-        pass
 
-
-class process_sensor():
+class sensor_handler():
     def decode_payload(self, payload):
         lht65_temperature = lht65n.get_temperature(payload)
         lht65_humidity = lht65n.get_humidity(payload)
         lht65_battery = lht65n.get_bat_info(payload)
         print(lht65_temperature, lht65_humidity, lht65_battery)
-
-
-
-
-
 
 
 if __name__ == '__main__':
