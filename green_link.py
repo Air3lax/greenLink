@@ -13,6 +13,7 @@ import sys
 import config_parser as cp
 import telegram_send
 import payload_decoding_LHT65N as lht65n
+import payload_decoding_LHT52 as lht52
 #import process_tempsensor as pt
 
 
@@ -100,10 +101,10 @@ class mqtt_handler():
 
 class sensor_handler():
     def decode_payload(self, payload):
-        lht65_temperature = lht65n.get_temperature(payload)
-        lht65_humidity = lht65n.get_humidity(payload)
-        lht65_battery = lht65n.get_bat_info(payload)
-        print(lht65_temperature, lht65_humidity, lht65_battery)
+        lht52_temperature = lht52_temperature(payload) # call only if fport is equal 2
+        lht52_humidity = lht52_humidity(payload) # call only if fport is equal 2
+        lht52_battery = lht52_battery(payload) # Call only if fport is equal 5
+        print(lht52_temperature, lht52_humidity, lht52_battery)
 
 
 if __name__ == '__main__':
