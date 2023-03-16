@@ -22,7 +22,6 @@ class mqtt_handler():
         self.scriptDir = os.path.dirname(os.path.realpath(__file__))
         print('INIT')
         self.logging('Started')
-        sensor_client = sensor_handler()
         try:
             self.config_data = cp.read_config()
             self.logging('Reading config-file _settings.json successfull')
@@ -31,9 +30,8 @@ class mqtt_handler():
         MQTT_SERVER_IP = self.config_data['mqtt_credentials']['ip']
         MQTT_SERVER_PORT = self.config_data['mqtt_credentials']['port']
         MQTT_UPLINK_TOPIC = self.config_data['mqtt_credentials']['uplink_topic']
+        sensor_client = sensor_handler()
         
-        TELEGRAM_TOKEN = self.config_data['telegram_credentials']['token']
-        TELEGRAM_CHAT_ID = self.config_data['telegram_credentials']['chat_id']
         sensor_list = []
         for i in self.config_data['lorawan_sensors']:
             sensor_list.append(i)
@@ -41,6 +39,7 @@ class mqtt_handler():
         #print(self.config_data['lorawan_sensors'][sensor_list[0]])
         # todo: maintain mqtt loop
         self.mqtt_client = mqtt.Client()
+        #self.sensor_clinet = sensor_handler()
         
 
         def on_connect_mqtt(client, userdata, flags, rc):
@@ -134,7 +133,9 @@ class mqtt_handler():
 class sensor_handler():
 
     def __init__(self) -> None:
+        #telegram_send.send_telegram_message('Testnachricht')
         pass
+
         
     def decode_payload_lht52(self, payload, fport):
         if fport == '2':
@@ -151,7 +152,8 @@ class sensor_handler():
         lwl02_total_events = lwl02.get_total_water_leak_events(payload)
         lwl02_event_duration = lwl02.get_last_water_leak_duration(payload)
         lwl02_battery = lwl02.get_bat_status(payload)
-        out = f"Events: {lwl02_total_events}, last Event: {lwl02_event_duration} Minutes. Battery: {lwl02_battery}."
+        out = f"Events: {lwl02_total_events}, last Event: {lwl02_event_duration} Minutes. Battery: {lwl02_battery} Volt."
+        telegram_send.send_telegram_message(out)
         print(out)
 
     def check_sensor_info(self, payload, fport, name):
@@ -163,3 +165,4 @@ class sensor_handler():
 
 if __name__ == '__main__':
     main_mqtt = mqtt_handler()
+    #main_sensor = sensor_handler()
