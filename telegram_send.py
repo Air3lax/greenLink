@@ -9,4 +9,4 @@ def send_telegram_message(message):
     CHAT_ID = config_data['telegram_credentials']['chat_id']
     message = message
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={CHAT_ID}&text={message}"
-    print(requests.get(url).json())
+    requests.get(url).json()

@@ -19,6 +19,10 @@ def get_last_water_leak_duration(payload):
     last_water_leak_duration = int(payload[12:18], 16)
     return last_water_leak_duration
 
+def get_last_timestamp(payload):
+    #last_timestamp = int(payload[], 16)
+    pass
+
 
 
 
