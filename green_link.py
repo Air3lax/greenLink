@@ -31,6 +31,8 @@ class mqtt_handler():
         MQTT_SERVER_IP = self.config_data['mqtt_credentials']['ip']
         MQTT_SERVER_PORT = self.config_data['mqtt_credentials']['port']
         MQTT_UPLINK_TOPIC = self.config_data['mqtt_credentials']['uplink_topic']
+        MQTT_USER = self.config_data['mqtt_credentials']['user']
+        MQTT_PASSWORD = self.config_data['mqtt_credentials']['password']
         sensor_client = sensor_handler()
         
         sensor_list = []
@@ -113,6 +115,7 @@ class mqtt_handler():
         self.mqtt_client.on_connect = on_connect_mqtt
         self.mqtt_client.on_message = on_message_mqtt
         self.mqtt_client.on_disconnect = on_disconnect_mqtt
+        self.mqtt_client.username_pw_set(MQTT_USER, MQTT_PASSWORD)
         self.mqtt_client.connect(MQTT_SERVER_IP, MQTT_SERVER_PORT, 10)
         self.mqtt_client.loop_forever()
     
