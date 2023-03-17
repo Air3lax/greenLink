@@ -218,7 +218,7 @@ class user_report():
             print('Leak detected, water is flowing and state set to True!')
             self.water_is_flowing = True
             '''
-        print(self.last_notification, last_duration, battery_state, total_events)
+        print(self.last_notification, last_duration, self.battery_state, total_events)
 
     def timer(self):
         self.tick = 0
@@ -227,7 +227,7 @@ class user_report():
                 self.tick += 1
             #print(self.tick)
             time.sleep(1)
-            if self.water_is_flowing == False and self.tick > 30 and self.user_was_notified == False:
+            if self.water_is_flowing == False and self.tick > 30 and self.user_was_notified == False and self.initial_event == True:
                 #print(f'Last Notification {seconds_ago} seconds ago')
                 telegram_send.send_telegram_message(f'Wasserlauf vor {self.tick} Sekunden ausgefallen!')
                 telegram_send.send_telegram_message(f'Batterie meldet {self.battery_state} Volt.')
