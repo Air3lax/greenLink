@@ -66,7 +66,7 @@ class mqtt_handler():
             while connected == False:
                 try:
                     self.mqtt_client.connect(MQTT_SERVER_IP, MQTT_SERVER_PORT, 10)
-                    self.mqtt_client.connect()
+                    #self.mqtt_client.connect()
                     time.sleep(1)
                     print('Server reconnected!')
                     self.logging('MQTT reconnected')
