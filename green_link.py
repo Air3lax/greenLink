@@ -7,14 +7,14 @@ import datetime
 import os
 import sys
 import base64
-from _thread import start_new_thread
+from   _thread import start_new_thread
 
 # Module imports
 import config_parser as cp
 import telegram_send
 import payload_decoding_LHT65N as lht65n
-import payload_decoding_LHT52 as lht52
-import payload_decoding_LWL02 as lwl02
+import payload_decoding_LHT52  as lht52
+import payload_decoding_LWL02  as lwl02
 #import process_tempsensor as pt
 
 
@@ -196,15 +196,15 @@ class user_report():
         #print(f'No Notification! Last message is only {seconds_ago} seconds ago. Must be greater then {self.TIME_BETWEEN_NOTIFICATIONS} seconds.')
         self.TIME_BETWEEN_NOTIFICATIONS = 60*60
         self.last_notification = timestamp
-        last_duration = event_duration
+        self.last_duration = event_duration
         self.battery_state = battery_state
         #To-Do: Generate states for water-flow
         if total_events > self.number_of_events:
             print('Waterflow detected!')
             self.water_is_flowing = True
             if self.user_was_notified == True:
-                telegram_send.send_telegram_message('Wasserlauf ist wiederhergestellt!')
-                telegram_send.send_telegram_message(f'Batterie meldet {self.battery_state} Volt.')
+                telegram_send.send_telegram_message(f'Wasserlauf ist wiederhergestellt, Batt: {self.battery_state} V')
+                #telegram_send.send_telegram_message(f'Batterie meldet {self.battery_state} Volt.')
                 self.tick = 0
                 self.user_was_notified = False
         
@@ -221,7 +221,7 @@ class user_report():
             print('Leak detected, water is flowing and state set to True!')
             self.water_is_flowing = True
             '''
-        print(self.last_notification, last_duration, self.battery_state, total_events)
+        print(self.last_notification, self.last_duration, self.battery_state, total_events)
 
     def timer(self):
         self.tick = 0
@@ -232,8 +232,8 @@ class user_report():
             time.sleep(1)
             if self.water_is_flowing == False and self.tick > 30 and self.user_was_notified == False and self.initial_event == True:
                 #print(f'Last Notification {seconds_ago} seconds ago')
-                telegram_send.send_telegram_message(f'Wasserlauf vor {self.tick} Sekunden ausgefallen!')
-                telegram_send.send_telegram_message(f'Batterie meldet {self.battery_state} Volt.')
+                telegram_send.send_telegram_message(f'Wasserlauf nach {self.last_duration} Minuten vor {self.tick} Sekunden ausgefallen, Batt: {self.battery_state} V.')
+                #telegram_send.send_telegram_message(f'Batterie meldet {self.battery_state} Volt.')
                 self.user_was_notified = True
             
 

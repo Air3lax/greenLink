@@ -38,8 +38,6 @@ def get_humidity(hex_str):
     return humidity_internal_sensor
 
 
-
-
 if __name__ == '__main__':
     #hex_str = '0e640106bc800163a16d45'
     hex_str = '08CD02207FFF0161CD4EDD' #Example from Dragino LHT52
