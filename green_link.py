@@ -230,7 +230,7 @@ class user_report():
                 self.tick += 1
             #print(self.tick)
             time.sleep(1)
-            if self.water_is_flowing == False and self.tick > 30 and self.user_was_notified == False and self.initial_event == True:
+            if self.water_is_flowing == False and self.tick > 300 and self.user_was_notified == False and self.initial_event == True:
                 #print(f'Last Notification {seconds_ago} seconds ago')
                 telegram_send.send_telegram_message(f'Wasserlauf nach {self.last_duration} Minuten vor {self.tick} Sekunden ausgefallen, Batt: {self.battery_state} V.')
                 #telegram_send.send_telegram_message(f'Batterie meldet {self.battery_state} Volt.')
