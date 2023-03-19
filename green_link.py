@@ -165,7 +165,7 @@ class sensor_handler():
     def check_sensor_info(self, payload, fport, name, timestamp):
         if name == 'LHT52':
             self.decode_payload_lht52(payload, fport)
-        if name == 'LWL02':
+        if name == 'LWL02' and fport == '10':
             self.decode_payload_lwl02(payload, timestamp)
 
 
