@@ -33,7 +33,7 @@ class mqtt_handler():
         MQTT_UPLINK_TOPIC   = self.config_data['mqtt_credentials']['uplink_topic']
         MQTT_USER           = self.config_data['mqtt_credentials']['user']
         MQTT_PASSWORD       = self.config_data['mqtt_credentials']['password']
-        sensor_client       = sensor_handler()
+        sensor_client = sensor_handler()
         sensor_list = []
         for i in self.config_data['lorawan_sensors']:
             sensor_list.append(i)
