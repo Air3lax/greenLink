@@ -153,6 +153,7 @@ class user_report(logger):
         self.initial_event = False
         self.water_is_flowing = False
         self.user_was_notified = False
+        self.last_duration = 0
         start_new_thread(self.timer, ())
         self.log = logger()
 
@@ -196,11 +197,17 @@ class user_report(logger):
         self.tick = 0
         while (True):
             self.tick += 1
-            if self.tick >= 120*60:
-                 telegram_send.send_telegram_message(f'Wasserlauf vor {self.tick/60} Minuten ausgefallen, bitte prüfen!, Batt: {self.battery_state} V.')
-                 self.initial_event = False
-                 while self.initial_event == False:
-                     pass # Wait here until next Message from LWL02
+            print(self.tick)
+            try:
+                if self.tick >= 10:                    
+                    telegram_send.send_telegram_message(f'Wasserlauf vor {self.tick/60} Minuten ausgefallen, bitte prüfen!, Batt: {self.battery_state} V.')
+                    self.initial_event = False
+                    while self.initial_event == False:
+                        pass # Wait here until next Message from LWL02
+            except:
+                pass
+
+            
                          
                     
             time.sleep(1)
