@@ -170,6 +170,7 @@ class user_report(logger):
         self.last_notification = timestamp
         
         self.battery_state = battery_state
+        '''
         if total_events > self.number_of_events:
             print('Waterflow active!')
             self.water_is_flowing = True
@@ -182,22 +183,33 @@ class user_report(logger):
             self.water_is_flowing = False
         else:
             print('Status Message from LWL02 (10 Minute in-event-update).')
+            '''
         self.number_of_events = total_events
         print(self.last_notification, self.last_duration, self.battery_state, total_events)
         out = f"Events: {total_events}, last Event: {self.last_duration} Minutes. Battery: {self.battery_state} Volt."
         self.log.logging(out)
         self.last_duration = event_duration
+        self.tick = 0
 
 
     def timer(self):
         self.tick = 0
         while (True):
-            if self.water_is_flowing == False:
-                self.tick += 1
+            self.tick += 1
+            if self.tick >= 120*60:
+                 telegram_send.send_telegram_message(f'Wasserlauf vor {self.tick/60} Minuten ausgefallen, bitte prüfen!, Batt: {self.battery_state} V.')
+                 self.initial_event = False
+                 while self.initial_event == False:
+                     pass # Wait here until next Message from LWL02
+                         
+                    
             time.sleep(1)
-            if self.water_is_flowing == False and self.tick > 20 and self.user_was_notified == False and self.initial_event == True:
+            '''
+            #if self.water_is_flowing == False and self.tick > 20 and self.user_was_notified == False and self.initial_event == True:
+            if self.initial_event == True:
                 telegram_send.send_telegram_message(f'Wasserlauf nach {self.last_duration} Minuten vor {self.tick} Sekunden ausgefallen, Batt: {self.battery_state} V.')
                 self.user_was_notified = True
+            '''
 
 
             
