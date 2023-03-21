@@ -204,6 +204,8 @@ class user_report(logger):
                     self.initial_event = False
                     while self.initial_event == False:
                         pass # Wait here until next Message from LWL02
+                    else:
+                        telegram_send.send_telegram_message('Recover')
             except:
                 pass
 
