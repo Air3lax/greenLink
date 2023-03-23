@@ -111,6 +111,7 @@ class sensor_handler():
             lht52_temperature = lht52.get_temperature(payload) # call only if fport is equal 2
             lht52_humidity = lht52.get_humidity(payload) # call only if fport is equal 2
             out= f"Temperature: {lht52_temperature} °C, Humidity: {lht52_humidity} %"
+            telegram_send.send_telegram_message(out)
             print(out)
         if fport == '5':
             lht52_battery = lht52.get_bat_info(payload) # Call only if fport is equal 5
