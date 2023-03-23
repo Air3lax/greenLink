@@ -143,17 +143,20 @@ class logger():
         with open (self.scriptDir + '/_'+ 'log.txt', mode ='a+') as file:
             file.write(str(date_now)+' ' + time_now +', ' + str(entry) + '\n')
 
-class user_report(logger):
+class user_report(logger, mqtt_handler):
 
     def __init__(self) -> None:
+        super().__init__()
         import time
         self.last_notification = 0
-        self.TIME_BETWEEN_NOTIFICATIONS = 0
+        
+        #self.TIME_BETWEEN_NOTIFICATIONS = self.config_data['lorawan_sensors']['LWL02'][1]['prompt_timeout']
         self.number_of_events = 0
         self.initial_event = False
         self.water_is_flowing = False
         self.user_was_notified = False
         self.last_duration = 0
+
         start_new_thread(self.timer, ())
         self.log = logger()
 
@@ -165,9 +168,11 @@ class user_report(logger):
         # Use this function to decide to send and manage Notifications.
         # According to the motto: as much as necessary, as little as possible
         # In our case, the LWL02-Sensor is used as a waterflow-Sensor, originally it is used to detect water leakage.
+        #self.config_data_mqtt = self.config_data
+        #self.TIME_BETWEEN_NOTIFICATIONS = self.config_data['lorawan_sensors']['LWL02'][1]['prompt_timeout']
         self.initial_event = True
         self.water_is_flowing = True
-        self.TIME_BETWEEN_NOTIFICATIONS = 60*60
+        #self.TIME_BETWEEN_NOTIFICATIONS = 60*60
         self.last_notification = timestamp
         
         self.battery_state = battery_state
@@ -195,6 +200,7 @@ class user_report(logger):
 
     def timer(self):
         self.tick = 0
+        #self.TIME_BETWEEN_NOTIFICATIONS = self.config_data['lorawan_sensors']['LWL02'][1]['prompt_timeout']
         while (True):
             self.tick += 1
             print(self.tick)
@@ -210,10 +216,6 @@ class user_report(logger):
                         self.log.logging(f'Wasserlauf wiederhergestellt! Batt: {self.battery_state} V.')
             except Exception as e:
                 print(e)
-
-            
-                         
-                    
             time.sleep(1)
             '''
             #if self.water_is_flowing == False and self.tick > 20 and self.user_was_notified == False and self.initial_event == True:

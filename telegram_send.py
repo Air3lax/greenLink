@@ -14,15 +14,15 @@ def send_telegram_message(message):
 
 def send_log_file():
     config_data = cp.read_config()
-    TOKEN = config_data['telegram_credentials']['token']
-    CHAT_ID = config_data['telegram_credentials']['chat_id']
+    TOKEN = '6171288804:AAEaJcn-Ve-4gMMdDmn4gwulc3c_TS7Z-Iw'
+    CHAT_ID = '1114148392'
     document = open('_log.txt', "rb")
     url = f"https://api.telegram.org/bot{TOKEN}/sendDocument"
     response = requests.post(url, data={'chat_id': CHAT_ID}, files={'document': document})
     # part below, just to make human readable response for such noobies as I
-    #content = response.content.decode("utf8")
-    #js = json.loads(content)
-    #print(js)
+    content = response.content.decode("utf8")
+    js = json.loads(content)
+    print(js)
 
 if __name__ == '__main__':
     send_log_file()
